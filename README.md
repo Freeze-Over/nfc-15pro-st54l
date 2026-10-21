@@ -157,13 +157,7 @@ blobs/odm/bin/hw/android.hardware.nfc-service-st       86,400 B
 blobs/system/app/Nfc_st/Nfc_st.apk                 15,905,312 B
 ```
 
-校验和（SHA-256 前缀）：
-
-| 文件 | SHA-256 |
-| --- | --- |
-| `nfc_nci.st21nfc.st.so` | `e3ea02c60951c227…` |
-| `st54l_fw.bin` | `22a9e85d…` |
-| `Nfc_st.apk` | 见你本地提取结果 |
+校验和：见 [§1 校验和](#校验和sha-256-完整值)，六个文件的完整 SHA-256 都列在那里。
 
 > 把 Android 镜像挂到手机上取文件的方法：`losetup -r` + `mount -t erofs`，
 > 需要先 `setenforce 0`，见 `docs/extract.md`。
