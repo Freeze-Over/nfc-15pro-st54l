@@ -203,7 +203,7 @@ blobs/system/app/Nfc_st/Nfc_st.apk                 15,905,312 B
 仓库的 `build/` 与 `blobs/` 不进 git，模块 zip 作为 **Release 附件** 发布：
 
 1. 打开仓库的 **Releases** 页，下载 `nfc-odm17.zip`；
-2. 核对校验和（v1.1 构建）：
+2. 核对校验和（Release 1.0，模块版本 1.1）：
 
 ```
 大小    6,777,864 B
