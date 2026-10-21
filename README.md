@@ -198,23 +198,45 @@ blobs/system/app/Nfc_st/Nfc_st.apk                 15,905,312 B
 
 ## 5. 构建与安装
 
-```powershell
-# 组装模块（需要 blobs/ 已就位）
-.\build.ps1
-# 产物：build/nfc-odm17.zip
+### 5.1 直接下载 Release（推荐给普通用户）
+
+仓库的 `build/` 与 `blobs/` 不进 git，模块 zip 作为 **Release 附件** 发布：
+
+1. 打开仓库的 **Releases** 页，下载 `nfc-odm17.zip`；
+2. 核对校验和（v1.1 构建）：
+
+```
+大小    6,777,864 B
+SHA-256 63298ef0d040c28b9698095098474223c521d40faded709c147c431c7abf4cba
 ```
 
-安装：
+3. 把 `frida-inject`（Frida 17.24.x android-arm64，约 84 MB）放到手机：
 
-1. 把 `/data/local/tmp/frida-inject` 放好（Frida 17.24.0 android-arm64，约 84 MB）；
-2. KernelSU/Magisk 安装 `nfc-odm17.zip`；
-3. 重启；
-4. 验证：
+```sh
+adb push frida-inject /data/local/tmp/frida-inject
+adb shell su -c 'chmod 755 /data/local/tmp/frida-inject'
+```
+
+4. KernelSU / Magisk「从本地安装」`nfc-odm17.zip`；
+5. 重启；
+6. 验证：
 
 ```sh
 adb shell su -c 'cat /data/local/tmp/nfc-odm17.log'
 # 期望：apk overlaid / hook inject rc=0
 ```
+
+> Release 附件包含小米/ST 的厂商文件，属再分发；如果介意，请用下面的源码方式自行构建。
+
+### 5.2 从源码构建
+
+```powershell
+# 需要 blobs/ 已就位（见 §4）
+.\build.ps1
+# 产物：build/nfc-odm17.zip
+```
+
+安装步骤同上（第 3 步起）。
 
 ---
 
@@ -258,11 +280,23 @@ adb shell su -c 'rm -rf /data/adb/modules/nfc-odm17 && reboot'
 
 ---
 
-## 9. 合规
+## 9. 合规与致谢
 
 - 本仓库代码：MIT。
 - `blobs/` 中的 HAL、固件、APK 版权归 Xiaomi / STMicroelectronics 所有，
   **不在本仓库分发**；请从你合法持有的设备固件中提取，仅供个人研究。
-- 参考项目：
+
+**参考项目**：
+
   - [ZhaoGY-N/huawei-nfc-eink-android-app](https://github.com/ZhaoGY-N/huawei-nfc-eink-android-app)
+    ——Q-Poll/QTag 命令、`0x81` ReaderMode 用法
   - [wiwiwei/ink-nfc-lab](https://github.com/wiwiwei/ink-nfc-lab)
+    ——MIFARE 兼容拦截（`createNativeNfcTag` hook）与 7A 轮询帧定义
+
+**致谢**：
+
+  - 感谢酷安 [**四十五度的天空**] 分享的小米 17 PixelOS 移植包——
+    没有它就无法对比确认「小米 17 的 NFC 栈 = HAL + 固件 + `Nfc_st.apk` 整套」，
+    也拿不到可用于 15 Pro 的 `Nfc_st.apk` 与 HAL/固件样本。
+  - 感谢 ink-nfc-lab 作者公开的协议分析与 hook 思路。
+
