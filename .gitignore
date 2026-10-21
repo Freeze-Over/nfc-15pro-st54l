@@ -1,0 +1,10 @@
+# build outputs
+build/
+
+# vendor blobs are not redistributed
+blobs/
+
+# tooling
+.vscode/
+*.log
+__pycache__/
