@@ -25,6 +25,26 @@ NXP 用 **Q-Poll**（NCI tech `0x71`）发这个短帧；ST 的方案是 **QTag 
 | `odm/bin/hw/android.hardware.nfc-service-st` | 86,376 B | 86,400 B |
 | `system/app/Nfc_st/Nfc_st.apk` | 15,388,724 B | 15,905,312 B |
 
+#### 校验和（SHA-256 完整值）
+
+| 文件 | 小米 17（pudding OS3.0.319） | 小米 15 Pro（haotian 原厂） |
+| --- | --- | --- |
+| `nfc_nci.st21nfc.st.so` | `e3ea02c60951c227233fbf359a73ef5aebcbd7214a62d5a0f96312eb9a272def` | `61a0f78c66374459c55b490d84c293220fb07e55ba2624c82b98013045ab181c` |
+| `st54l_fw.bin` | `22a9e85dfe459676f401fbc67cf9870176c7d9c583aefd9963701b2e112fbe4d` | `15da4aa955c9f8e692c81ec94ebc44ca71385c31991f57d2842c577c40c8e9dc` |
+| `libnfc-hal-st.conf` | `fd2db7dbdfcda7b4710edf60c0d270bf06bcfb662174771a0fe541a71188c6f9` | `c637449901f713f9b89d5035aa7154d78f7423e3b2b7a6268010458c9b1408b5` |
+| `st54l_conf.txt` | `035aba67836fb28eb130bfece420dfd26b4210056dbe0a0c107d0bc1260d0007` | `1649b572fdfa330964ac481ce75cd33301bdb01a0024ea3e91c9409ae71e7b46` |
+| `android.hardware.nfc-service-st` | `180fd75773f8eaf568fc10e54df9ec1fde6f0f99164daf5880ae7ecba13bae88` | —（未保留） |
+| `Nfc_st.apk` | `0e4ac8ddaf8b1480f4beabe551494927e0cdee632b1340315b65225d4c8c64e4` | `88c4eaa7a22837330e3a1fa0bcd60476d933f6867054f6822f24e996c5dba0dd` |
+
+#### 命令实测（15 Pro，`sendVendorNciMessage`）
+
+| 命令 | 原厂栈 | pudding 栈 + `Nfc_st.apk` |
+| --- | --- | --- |
+| `0x13` 配置 7A 轮询帧（`01 2A 02 0A 7A`） | `1305` | **`1300`** ✅ |
+| `0x15` 读取轮询帧 | `150B` | `150B`（刷图不需要） |
+| `0x70` QTag 开（`31 01`） | `05` | `05`（小米 17 上为 `00`） |
+| 壳子激活 | 失败（`NFA_SELECT_RESULT_EVT status = 3`） | **成功**（配合 frida hook） |
+
 实测（15 Pro 原厂 HAL，`sendVendorNciMessage`）：
 
 ```
