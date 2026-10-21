@@ -206,8 +206,8 @@ blobs/system/app/Nfc_st/Nfc_st.apk                 15,905,312 B
 2. 核对校验和（Release 1.0，模块版本 1.1）：
 
 ```
-大小    6,777,864 B
-SHA-256 63298ef0d040c28b9698095098474223c521d40faded709c147c431c7abf4cba
+大小    6,781,490 B
+SHA-256 76b6cd5119a7981ccf765ef0cdafec329c0a0be9b22d5f2ceec340e1b9cafbb9
 ```
 
 3. 把 `frida-inject`（Frida 17.24.x android-arm64，约 84 MB）放到手机：

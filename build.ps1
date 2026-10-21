@@ -35,6 +35,9 @@ New-Item -ItemType Directory -Force -Path $mod | Out-Null
 Write-Host "[1/3] copying module files"
 Copy-Item (Join-Path $root "module\*") $mod -Recurse -Force
 Copy-Item (Join-Path $root "tools\pack_module.py") $OutDir -Force
+if (-not (Test-Path (Join-Path $mod "q13.jar"))) {
+    throw "module\q13.jar missing. prep.sh depends on it. See README 5.2 / src/q13."
+}
 
 Write-Host "[2/3] copying vendor blobs"
 foreach ($target in $blobs.Keys) {
