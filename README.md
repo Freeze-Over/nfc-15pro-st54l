@@ -110,6 +110,38 @@ sendVendorNciMessage(gid=1, oid=0x0f, sub=0x13, payload = 01 2A 02 0A 7A)
 
 之后控制器用 `0x7A` 寻卡，壳子才会应答。
 
+### 2.4 模块里包含什么
+
+`nfc-odm17.zip`（约 6.8 MB）由两部分组成：**小米 17 的厂商文件** + **我们自己写的控制脚本**。
+
+**厂商文件**（从 pudding 固件提取，运行时覆盖到系统对应路径）：
+
+| 路径 | 大小 | 作用 |
+| --- | --- | --- |
+| `odm/lib64/nfc_nci.st21nfc.st.so` | 283,656 B | ST HAL，含 `stpropnci_*` 厂商命令引擎（15 Pro 原厂只有 200,560 B 且没有这套） |
+| `odm/firmware/st54l_fw.bin` | 260,157 B | CLF/ST54L 固件（15 Pro 原厂 250,917 B） |
+| `odm/etc/libnfc-hal-st.conf` | 7,177 B | HAL 配置（15 Pro 原厂 6,282 B） |
+| `odm/etc/st54l_conf.txt` | 6,771 B | CLF 配置（与 HAL 配套） |
+| `odm/bin/hw/android.hardware.nfc-service-st` | 86,400 B | HIDL vendor 服务，负责 dlopen HAL |
+| `system/app/Nfc_st/Nfc_st.apk` | 15,905,312 B | 框架 NFC App（内含 `libstnfc_nci_jni.so`，即 hook 的目标库；15 Pro 原厂 15,388,724 B） |
+
+> 这六个文件就是「小米 17 的 NFC 栈」。只换其中一部分都不行：
+> 少了 HAL 没有 `stpropnci`，少了 APK 框架不认 ST 的激活方式。
+
+**脚本与探针**：
+
+| 文件 | 作用 |
+| --- | --- |
+| `module.prop` | 模块信息 |
+| `post-fs-data.sh` | 开机建 suid tmpfs，把上面 6 个文件拷进去、打 SELinux 标签、bind mount 覆盖 |
+| `service.sh` | 等 NFC 服务起来后，用 `frida-inject` 注入 `mifare.js` |
+| `prep.sh` | 刷图前发送 `0x13` 配置 7A 轮询帧 |
+| `mifare.js` | hook `NfcTag::createNativeNfcTag`，清 `mNumDiscNtf`，阻止系统抢卡 |
+| `q13.jar` | `prep.sh` 调用的探针（源码 `src/q13/Q13.java`） |
+
+仓库里另附 `src/qtag/Qtag.java`（QTag `0x70` 探针）和 `tools/`（payload/lpunpack/sparse 解析脚本），
+方便你自己从固件里取文件。
+
 ---
 
 ## 3. 目录结构
