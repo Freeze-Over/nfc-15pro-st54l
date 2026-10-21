@@ -206,8 +206,8 @@ blobs/system/app/Nfc_st/Nfc_st.apk                 15,905,312 B
 2. 核对校验和（Release 1.2，模块版本 1.2）：
 
 ```
-大小    6,781,490 B
-SHA-256 76b6cd5119a7981ccf765ef0cdafec329c0a0be9b22d5f2ceec340e1b9cafbb9
+大小    6,781,723 B
+SHA-256 b3b58eec591728731ee0242d2a2b16eeb2b097e03bb5615f3c6ab6d079fd8371
 ```
 
 3. 把 `frida-inject`（Frida 17.24.x android-arm64，约 84 MB）放到手机：
@@ -223,7 +223,7 @@ adb shell su -c 'chmod 755 /data/local/tmp/frida-inject'
 
 ```sh
 adb shell su -c 'cat /data/local/tmp/nfc-odm17.log'
-# 期望：apk overlaid / hook inject rc=0
+# 期望：apk overlaid / hook inject rc=0 / prep ok (attempt 1)
 ```
 
 > Release 附件包含小米/ST 的厂商文件，属再分发；如果介意，请用下面的源码方式自行构建。
@@ -242,8 +242,11 @@ adb shell su -c 'cat /data/local/tmp/nfc-odm17.log'
 
 ## 6. 刷图流程
 
+> `service.sh` 会在开机时**自动**注入 hook 并发送 `0x13`（日志出现 `prep ok`）。
+> 但 NFC 服务如果中途重启过，`0x13` 会丢失 —— 此时手动补跑一次 `prep.sh` 即可。
+
 1. 壳子贴住手机 NFC 线圈，压稳；
-2. 配轮询帧：
+2. 如果开机后还没配过轮询帧（或重连过 NFC），先手动补一次：
 
 ```sh
 adb shell su -c 'sh /data/adb/modules/nfc-odm17/prep.sh'
