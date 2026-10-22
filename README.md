@@ -256,6 +256,16 @@ adb shell su -c 'sh /data/adb/modules/nfc-odm17/prep.sh'
 3. 打开 QPollLab（`org.nfcresearch.qpolllab`）→「发送当前预览到墨水屏」→「确认并开始刷新」；
 4. 保持贴合，直到提示「刷新周期已结束」。
 
+> 需要“把手机拿开再贴回”才能再次寻卡时，用带断场复位的写法代替：
+>
+> ```sh
+> adb shell su -c 'sh /data/adb/modules/nfc-odm17/prep.sh 2000 8000'
+> # field OFF for 2000 ms / SEND ... resp=1300 / HOLD 8000 ms / resume=ok
+> ```
+>
+> 关场 2 s 让壳子掉电复位，随后留 8 s 窗口给你点 App 的刷新；ReaderMode 先就位、
+> 场再回来，首轮寻卡就归 App，而不是被系统标签分发抢走。参数按 `dwell hold` 调整。
+
 ---
 
 ## 7. 回滚

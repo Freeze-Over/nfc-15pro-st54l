@@ -1,8 +1,6 @@
 id=nfc-odm17
 name=NFC ST HAL (Xiaomi 17 pudding) + Nfc_st.apk
-version=1.2
-versionCode=3
+version=1.3
+versionCode=4
 author=nfc-qpoll contributors
-description=Overlay Xiaomi 17 (pudding) ST54L HAL, firmware, configs and Nfc_st.apk onto a Xiaomi 15 Pro (haotian). EXPERIMENTAL. Remove module and reboot to revert.
-
-
+description=Overlay Xiaomi 17 (pudding) ST54L HAL, firmware, configs and Nfc_st.apk onto a Xiaomi 15 Pro (haotian). EXPERIMENTAL. Action button = field-reset for the e-ink case + 7A re-arm. Remove module and reboot to revert.

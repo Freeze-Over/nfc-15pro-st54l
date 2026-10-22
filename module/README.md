@@ -42,14 +42,33 @@ adb shell su -c 'cat /data/local/tmp/nfc-odm17.log'
 ## 刷图流程
 
 1. 壳子贴到手机 NFC 线圈位置，压稳；
-2. 配 7A 轮询帧（每次 NFC 重启后做一次）：
+2. 复位壳子并配 7A 轮询帧（替代“把手机拿开再贴回”）。最省事的是 KernelSU 里点模块的**执行**按钮
+   （`action.sh`，等价于 `prep.sh 2000 40000`），它会关场 2 s、配 7A、留 40 秒窗口；
+3. 在 40 秒窗口内切到 QPollLab 点「发送当前预览到墨水屏」→「确认并开始刷新」；
+4. 保持贴合直到提示「刷新周期已结束」。
+
+命令行等价写法：
+
+```sh
+adb shell su -c 'sh /data/adb/modules/nfc-odm17/prep.sh 2000 40000'
+# field OFF for 2000 ms
+# SEND 13012A020A7A send=0 resp=1300
+# HOLD 40000 ms; start the reader session in the app now
+# resume=ok
+```
+
+`2000` 是关场保持时间：壳子是无源设备，会话结束后只有 RF 场掉电才会复位；
+`40000` 是开场前的等待窗口，用来在这段时间里点 App 的「发送当前预览到墨水屏」，
+让 App 的 ReaderMode 先就位，场再回来。
+
+只配 7A、不复位（开机 `service.sh` 用的就是这种）：
 
 ```sh
 adb shell su -c 'sh /data/adb/modules/nfc-odm17/prep.sh'
 # 输出 SEND 13012A020A7A send=0 resp=1300  resume=ok
 ```
 
-3. 立刻在 QPollLab 里「发送当前预览到墨水屏」→「确认并开始刷新」；
+3. 在 QPollLab 里「发送当前预览到墨水屏」→「确认并开始刷新」；
 4. 保持贴合直到提示「刷新周期已结束」。
 
 ## 开关
