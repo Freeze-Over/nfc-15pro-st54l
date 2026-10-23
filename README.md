@@ -313,6 +313,11 @@ adb shell su -c 'rm -rf /data/adb/modules/nfc-odm17 && reboot'
     NFC/eSE 失效或卡片被锁、保修与认证失效，作者与贡献者概不负责。`blobs/` 版权归 Xiaomi / ST，
     仅供个人研究、请勿商用或再分发。下载安装即视为接受上述风险；不接受请删除模块目录并重启。
 
+### AI 生成声明
+- 本项目的代码、脚本与文档（`prep.sh`、`action.sh`、`service.sh`、`post-fs-data.sh`、`mifare.js`、
+  `q13.jar` / `Qtag.java`、`build.ps1`）**全部由 AI（大语言模型）生成**，未经逐行人工审计，可能
+  存在逻辑错误、兼容性问题或安全隐患；请在审查后使用，作者不对采信生成内容导致的后果负责。
+
 **致谢**：
 
   - 感谢酷安 [**四十五度的天空**] 分享的小米 17 PixelOS 移植包——
