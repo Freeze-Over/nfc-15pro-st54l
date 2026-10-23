@@ -306,6 +306,13 @@ adb shell su -c 'rm -rf /data/adb/modules/nfc-odm17 && reboot'
   - [wiwiwei/ink-nfc-lab](https://github.com/wiwiwei/ink-nfc-lab)
     ——MIFARE 兼容拦截（`createNativeNfcTag` hook）与 7A 轮询帧定义
 
+
+### 10. 免责声明
+  - 本模块按“现状”（AS IS）提供，不附带任何明示或默示担保。使用本模块（含 `nfc-odm17.zip`、
+    `prep.sh`、`action.sh`、`q13.jar`）所产生的一切后果由使用者自行承担：设备损坏/变砖、数据丢失、
+    NFC/eSE 失效或卡片被锁、保修与认证失效，作者与贡献者概不负责。`blobs/` 版权归 Xiaomi / ST，
+    仅供个人研究、请勿商用或再分发。下载安装即视为接受上述风险；不接受请删除模块目录并重启。
+
 **致谢**：
 
   - 感谢酷安 [**四十五度的天空**] 分享的小米 17 PixelOS 移植包——
